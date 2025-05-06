@@ -1,12 +1,12 @@
 <img src="./logo.svg"/>
 
-# 柴油是一种安全、 可扩展的 ORM 和查询生成器
+## 柴油是一种安全、 可扩展的 ORM 和查询生成器
 
-## Diesel CRUD 指南
+### Diesel CRUD 指南
 
 CRUD 代表“创建、读取、更新、删除”, Diesel 为所有 4 个部分提供支持。
 
-## 初始化新项目
+### 初始化新项目
 
 我们需要做的第一件事是生成我们的项目。
 
@@ -15,7 +15,7 @@ cargo new demo
 cd demo
 ```
 
-## 安装 Diesel CLI
+### 安装 Diesel CLI
 
 ```bash
 # Linux/MacOS
@@ -32,7 +32,7 @@ irm https://github.com/diesel-rs/diesel/releases/latest/download/diesel_cli-inst
 cargo install diesel_cli
 ```
 
-## 为您的项目设置 Diesel
+### 为您的项目设置 Diesel
 
 我们可以将 `DATABASE_URL` 写入 `.env` 文件，避免污染全局环境，方便本地多个项目使用各自的数据库配置。
 
@@ -95,9 +95,9 @@ diesel::table! {
 }
 ```
 
-## CRUD
+### CRUD
 
-### 创建用户
+#### 创建用户
 
 ```rust
 #[post("/users")]
@@ -120,7 +120,7 @@ async fn create_posts(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Resu
 }
 ```
 
-### 获取用户
+#### 获取用户
 
 ```rust
 #[get("/users")]
@@ -153,7 +153,7 @@ async fn get_user(pool: web::Data<DbPool>, path: web::Path<i32>) -> Result<impl 
 }
 ```
 
-### 更新用户
+#### 更新用户
 
 ```rust
 #[put("/users/{id}")]
@@ -180,7 +180,7 @@ async fn update_user(
 }
 ```
 
-### 删除用户
+#### 删除用户
 
 ```rust
 #[delete("/users/{id}")]
