@@ -95,7 +95,7 @@ diesel::table! {
 }
 ```
 
-### CRUD
+### CRUD 示例
 
 #### 创建用户
 
