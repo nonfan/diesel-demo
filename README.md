@@ -9,8 +9,8 @@ CRUD 代表“创建、读取、更新、删除”, Diesel 为所有 4 个部分
 **项目结构预览**
 ```bash
 diesel_demo/
-├── migrations/                  # Diesel 数据库迁移文件夹（由 diesel CLI 创建）
-│   └── ...                      # 每次执行 `diesel migration generate` 会在这里生成 up/down.sql
+├── migrations/                 # Diesel 数据库迁移文件夹（由 diesel CLI 创建）
+│   └── ...                     # 每次执行 `diesel migration generate` 会在这里生成 up/down.sql
 │
 ├── src/
 │   ├── main.rs                 # 项目入口，配置 Actix Web 路由 & 数据库连接池
