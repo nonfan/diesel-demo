@@ -14,8 +14,8 @@ diesel_demo/
 │
 ├── src/
 │   ├── main.rs                 # 项目入口，配置 Actix Web 路由 & 数据库连接池
-│   ├── models.rs              # 数据模型，定义表结构体（如 User），用于查询、插入、更新
-│   ├── schema.rs              # Diesel 自动生成的数据库表映射宏，不能手动修改
+│   ├── models.rs               # 数据模型，定义表结构体（如 User），用于查询、插入、更新
+│   ├── schema.rs               # Diesel 自动生成的数据库表映射宏，不能手动修改
 │
 ├── .env                        # 环境变量文件，通常放置 DATABASE_URL，例如：sqlite://database.db
 ├── .gitignore                  # 忽略不需要提交到 Git 的文件，例如 target/、.env、database.db 等
