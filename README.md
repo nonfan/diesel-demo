@@ -1,4 +1,8 @@
-# Diesel CRUD 指南
+<img src="./logo.svg"/>
+
+# 柴油是一种安全、 可扩展的 ORM 和查询生成器
+
+## Diesel CRUD 指南
 
 CRUD 代表“创建、读取、更新、删除”, Diesel 为所有 4 个部分提供支持。
 
