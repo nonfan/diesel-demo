@@ -2,8 +2,8 @@
 
 diesel::table! {
     users (id) {
-        id -> Integer,
-        username -> Text,
+        id -> Int4,
+        username -> Varchar,
         remark -> Text,
     }
 }

@@ -127,7 +127,7 @@ Creating migrations/2025-05-06-062724_create_users/down.sql
 **up.sql**
 ```up.sql
 CREATE TABLE users (
-   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   id SERIAL PRIMARY KEY,
    username VARCHAR NOT NULL,
    remark TEXT NOT NULL
 )
