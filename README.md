@@ -39,44 +39,14 @@ cd demo
 ```toml
 [dependencies]
 actix-web = { version = "4.10.2" }
-diesel = { version = "2.2", features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
-dotenvy = "0.15"
+diesel = { version = "2.2.0", features = ["mysql", "r2d2"] }
 serde = { version = "1.0", features = ["derive"] }
+dotenvy = "0.15"
 env_logger = "0.11"
 serde_json = "1.0"
 ```
 
 #### features 解释
-
-**returning_clauses_for_sqlite_3_35**
-
-在 SQLite 3.35.0（2021年3月发布）之前，SQLite 不支持 RETURNING 子句（允许在 INSERT/UPDATE/DELETE 后直接返回修改的数据），也就是如下示例：
-
-```rust
-async fn example() {
-    let deleted_user = web::block(move || {
-        diesel::delete(users.filter(id.eq(user_id)))
-        // 如下代码必须在添加returning_clauses_for_sqlite_3_35特性可使用， 且models数据结构添加Selectable宏
-        .returning(User::as_returning())
-        .get_result(&mut conn) // 返回被删除的行
-    });
-}
-```
-
-添加 `Selectable` 宏:
-
-```rust
-#[derive(Selectable)]
-pub struct User {
-    pub id: i32,
-    pub username: String,
-    pub remark: String,
-}
-```
-
-这个 feature 是 Diesel 为平衡兼容性和功能提供的选项，适合需要优化 SQLite 操作性能的场景。
-
-未正确启用 `returning_clauses_for_sqlite_3_35`, 虽然你在 Cargo.toml 中启用了该 feature，但可能未正确传递依赖。**运行 `cargo clean && cargo build` 确保 feature 生效**
 
 **r2d2**
 
@@ -100,13 +70,31 @@ irm https://github.com/diesel-rs/diesel/releases/latest/download/diesel_cli-inst
 ```shell
 cargo install diesel_cli
 ```
+### Docker Mysql 容器
+
+使用 Docker 创建一个 MySQL 容器并运行，安装 `mysql:8.0` 版本：
+
+```bash
+docker run -d  --name 数据库名称 -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 mysql:8.0
+```
+
+即使添加了 `Mysql` 容器也无法在本地运行 Mysql 命令，需要在本地添加 Mysql 客户端：
+
+```bash
+# 兼容考虑，请指定8.0版本
+brew install mysql@8.0
+
+# 卸载命令
+brew uninstall mysql
+```
+
 
 ### 为您的项目设置 Diesel
 
 我们可以将 `DATABASE_URL` 写入 `.env` 文件，避免污染全局环境，方便本地多个项目使用各自的数据库配置。
 
 ```bash 
-echo DATABASE_URL=./database.db > .env
+echo DATABASE_URL=mysql://user:password@127.0.0.1:3306/数据库名称 > .env
 ```
 
 现在通过 Diesel CLI 初始化我们项目的基本内容：
@@ -137,10 +125,10 @@ Creating migrations/2025-05-06-062724_create_users/down.sql
 **up.sql**
 ```up.sql
 CREATE TABLE users (
-   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-   username VARCHAR NOT NULL,
+   id INTEGER AUTO_INCREMENT PRIMARY KEY,
+   username VARCHAR(255) NOT NULL,
    remark TEXT NOT NULL
-)
+);
 ```
 **down.sql**
 ```
@@ -159,7 +147,8 @@ diesel migration run
 diesel::table! {
     users (id) {
         id -> Integer,
-        username -> Text,
+        #[max_length = 255]
+        username -> Varchar,
         remark -> Text,
     }
 }
@@ -171,44 +160,43 @@ diesel::table! {
 use crate::schema::users;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-#[derive(Queryable, Insertable, Selectable,     Serialize, Deserialize, Debug)]
+#[derive(Queryable, Insertable, Selectable, Serialize, Deserialize, Debug)]
 #[diesel(table_name = users)]
-#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct User {
     pub id: i32,
     pub username: String,
     pub remark: String,
 }
 
-#[derive(Insertable, Deserialize)]
+#[derive(Insertable, Deserialize, Serialize, Clone)]
 #[diesel(table_name = users)]
 pub struct NewUser {
     pub username: String,
     pub remark: String,
 }
+
 ```
 
-### SQLite 数据库连接
+### MySQL 数据库连接
 
 ```rust
 // 定义一个用于异步共享的数据库连接池类型
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+type DbPool = r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
-    // 获取数据库文件地址
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    let manager = ConnectionManager::<SqliteConnection>::new(database_url);
+    let manager = ConnectionManager::<MysqlConnection>::new(database_url);
 
-    // 初始化数据库连接池
     let pool = r2d2::Pool::builder()
     .max_size(15)
     .build(manager)
-    .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("Failed to build pool: {}", e)))?;
-
+    .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+    
     HttpServer::new(move || {
         App::new()
         // 克隆连接池，以共享连接池
@@ -225,6 +213,8 @@ async fn main() -> std::io::Result<()> {
 }
 ```
 
+在 `SQLite` 和 `PostgreSQL` 数据库中我们可以通过调用 `.get_result` 在 INSERT 或 UPDATE 语句上变化的数据，而 Mysql 并不支持这一属性，如果要获取更新的数据，可以通过主键查询等方法。
+
 ### CRUD 示例
 
 #### 创建用户
@@ -235,10 +225,11 @@ async fn create_posts(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Resu
     use crate::schema::users::dsl::*;
 
     let new_user = body.into_inner();
+    let data = new_user.clone();
 
     let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
 
-    let result = web::block(move || {
+    web::block(move || {
         diesel::insert_into(users)
         .values(&new_user)
         .execute(&mut conn)
@@ -246,11 +237,13 @@ async fn create_posts(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Resu
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;
 
-    Ok(HttpResponse::Ok().json(result))
+    Ok(HttpResponse::Ok().json(json!({"message": "创建用户成功","data": data})))
 }
 ```
 
 #### 获取用户
+
+**获取全部用户**
 
 ```rust
 #[get("/users")]
@@ -267,8 +260,9 @@ async fn list_users(pool: web::Data<DbPool>) -> Result<impl Responder> {
 }
 ```
 
-```rust
+**获取单个用户**
 
+```rust
 #[get("/users/{id}")]
 async fn get_user(pool: web::Data<DbPool>, path: web::Path<i32>) -> Result<impl Responder> {
     let user_id = path.into_inner();
@@ -297,7 +291,7 @@ async fn update_user(
 
     let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
 
-    let result = web::block(move || {
+    web::block(move || {
         diesel::update(users)
         .filter(id.eq(user_id))
         .set((username.eq(new_user.username), remark.eq(new_user.remark)))
@@ -306,7 +300,7 @@ async fn update_user(
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;
 
-    Ok(HttpResponse::Ok().json(result))
+    Ok(HttpResponse::Ok().json(json!({"message": "修改成功"})))
 }
 ```
 
@@ -314,19 +308,28 @@ async fn update_user(
 
 ```rust
 #[delete("/users/{id}")]
-async fn delete_user(pool: web::Data<DbPool>, path: web::Path<i32>) -> Result<impl Responder> {
+async fn delete_user(
+    pool: web::Data<DbPool>,
+    path: web::Path<i32>,
+) -> Result<impl Responder> {
     let user_id = path.into_inner();
+    let mut conn = pool.get().map_err(error::ErrorInternalServerError)?;
 
-    let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
-
-    let result = web::block(move || {
-        diesel::delete(users)
-        .filter(id.eq(user_id))
+    let deleted_user = web::block(move || {
+        diesel::delete(users.filter(id.eq(user_id)))
         .execute(&mut conn)
     })
-    .await?
-    .map_err(|e| error::ErrorInternalServerError(e))?;
+    .await?;
 
-    Ok(HttpResponse::Ok().json(result))
+    match deleted_user {
+        Ok(rows_affected) => {
+            if rows_affected == 0 {
+                return Ok(HttpResponse::NotFound().json(json!({ "message": "用户不存在" })))
+            }
+
+            Ok(HttpResponse::Ok().json(json!({ "message": "删除成功" })))
+        },
+        Err(e) => Err(error::ErrorInternalServerError(e)),
+    }
 }
 ```

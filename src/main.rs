@@ -1,17 +1,17 @@
 use crate::models::{NewUser, User};
-use crate::schema::users::dsl::*;
 use actix_web::{
     App, HttpResponse, HttpServer, Responder, Result, delete, error, get, post, put, web,
 };
+use diesel::r2d2::{self,ConnectionManager};
 use serde_json::json;
 use diesel::prelude::*;
-use diesel::r2d2;
-use diesel::r2d2::ConnectionManager;
 use dotenvy::dotenv;
 use std::{env, io};
+use crate::schema::users::dsl::*;
+
 pub mod models;
 pub mod schema;
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+type DbPool = r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
 #[get("/users")]
 async fn list_users(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -44,19 +44,19 @@ async fn create_posts(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Resu
     use crate::schema::users::dsl::*;
 
     let new_user = body.into_inner();
+    let data = new_user.clone();
 
     let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
 
-    let result = web::block(move || {
+    web::block(move || {
         diesel::insert_into(users)
-            .values(new_user)
-        .returning(User::as_returning())
-        .get_result(&mut conn)
+            .values(&new_user)
+        .execute(&mut conn)
     })
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;
 
-    Ok(HttpResponse::Ok().json(result))
+    Ok(HttpResponse::Ok().json(json!({"message": "创建用户成功","data": data})))
 }
 
 #[put("/users/{id}")]
@@ -70,16 +70,16 @@ async fn update_user(
 
     let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
 
-    let result = web::block(move || {
+    web::block(move || {
         diesel::update(users)
-            .filter(id.eq(user_id))
-            .set((username.eq(new_user.username), remark.eq(new_user.remark)))
-            .execute(&mut conn)
+        .filter(id.eq(user_id))
+        .set((username.eq(new_user.username), remark.eq(new_user.remark)))
+        .execute(&mut conn)
     })
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;
 
-    Ok(HttpResponse::Ok().json(result))
+    Ok(HttpResponse::Ok().json(json!({"message": "修改成功"})))
 }
 
 #[delete("/users/{id}")]
@@ -92,14 +92,18 @@ async fn delete_user(
 
     let deleted_user = web::block(move || {
         diesel::delete(users.filter(id.eq(user_id)))
-        .returning(User::as_returning())
-        .get_result(&mut conn) // 返回被删除的行
+        .execute(&mut conn)
     })
     .await?;
 
     match deleted_user {
-        Ok(user) => Ok(HttpResponse::Ok().json(user)),
-        Err(diesel::NotFound) => Ok(HttpResponse::NotFound().json(json!({ "error": "用户不存在" }))),
+        Ok(rows_affected) => {
+            if rows_affected == 0 {
+                return Ok(HttpResponse::NotFound().json(json!({ "message": "用户不存在" })))
+            }
+
+            Ok(HttpResponse::Ok().json(json!({ "message": "删除成功" })))
+        },
         Err(e) => Err(error::ErrorInternalServerError(e)),
     }
 }
@@ -110,7 +114,9 @@ async fn main() -> io::Result<()> {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let manager = ConnectionManager::<SqliteConnection>::new(database_url);
+
+    let manager = ConnectionManager::<MysqlConnection>::new(database_url);
+
     let pool = r2d2::Pool::builder()
         .max_size(15)
         .build(manager)
