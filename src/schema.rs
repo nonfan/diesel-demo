@@ -3,7 +3,8 @@
 diesel::table! {
     users (id) {
         id -> Integer,
-        username -> Text,
+        #[max_length = 255]
+        username -> Varchar,
         remark -> Text,
     }
 }
