@@ -1,5 +1,6 @@
+-- Your SQL goes here
 CREATE TABLE users (
-   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   id SERIAL PRIMARY KEY,
    username VARCHAR NOT NULL,
    remark TEXT NOT NULL
 )

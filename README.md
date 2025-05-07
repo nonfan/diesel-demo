@@ -16,10 +16,8 @@ diesel_demo/
 │   ├── main.rs                 # 项目入口，配置 Actix Web 路由 & 数据库连接池
 │   ├── models.rs               # 数据模型，定义表结构体（如 User），用于查询、插入、更新
 │   ├── schema.rs               # Diesel 自动生成的数据库表映射宏，不能手动修改
-│
 ├── .env                        # 环境变量文件，通常放置 DATABASE_URL，例如：sqlite://database.db
 ├── .gitignore                  # 忽略不需要提交到 Git 的文件，例如 target/、.env、database.db 等
-├── database.db                 # SQLite 数据文件（由 Diesel 自动创建）
 ├── Cargo.toml                  # Rust 项目的依赖管理文件，记录依赖包、版本、构建信息等
 ├── README.md                   # 项目说明文档，介绍项目用途、如何运行、如何使用等
 ```
@@ -39,7 +37,7 @@ cd demo
 ```toml
 [dependencies]
 actix-web = { version = "4.10.2" }
-diesel = { version = "2.2", features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
+diesel = { version = "2.2", features = ["postgres", "r2d2",] }
 dotenvy = "0.15"
 serde = { version = "1.0", features = ["derive"] }
 env_logger = "0.11"
@@ -47,36 +45,6 @@ serde_json = "1.0"
 ```
 
 #### features 解释
-
-**returning_clauses_for_sqlite_3_35**
-
-在 SQLite 3.35.0（2021年3月发布）之前，SQLite 不支持 RETURNING 子句（允许在 INSERT/UPDATE/DELETE 后直接返回修改的数据），也就是如下示例：
-
-```rust
-async fn example() {
-    let deleted_user = web::block(move || {
-        diesel::delete(users.filter(id.eq(user_id)))
-        // 如下代码必须在添加returning_clauses_for_sqlite_3_35特性可使用， 且models数据结构添加Selectable宏
-        .returning(User::as_returning())
-        .get_result(&mut conn) // 返回被删除的行
-    });
-}
-```
-
-添加 `Selectable` 宏:
-
-```rust
-#[derive(Selectable)]
-pub struct User {
-    pub id: i32,
-    pub username: String,
-    pub remark: String,
-}
-```
-
-这个 feature 是 Diesel 为平衡兼容性和功能提供的选项，适合需要优化 SQLite 操作性能的场景。
-
-未正确启用 `returning_clauses_for_sqlite_3_35`, 虽然你在 Cargo.toml 中启用了该 feature，但可能未正确传递依赖。**运行 `cargo clean && cargo build` 确保 feature 生效**
 
 **r2d2**
 
@@ -100,13 +68,35 @@ irm https://github.com/diesel-rs/diesel/releases/latest/download/diesel_cli-inst
 ```shell
 cargo install diesel_cli
 ```
+### Docker PostgreSQL 容器
+
+使用 Docker 创建一个 PostgreSQL 容器并运行: 
+
+```bash
+docker run --name 容器名称 -e POSTGRES_PASSWORD=123456 -e POSTGRES_DB=databse -p 5432:5432 -d postgres
+```
+
+**`-e POSTGRES_DB` 可选**，默认创建数据库 `postgres`，用户名 `postgres`。
+
+
+
+安装 Postgres 客户端：
+
+```bash
+brew install postgresql
+
+# 卸载命令
+brew uninstall postgresql
+```
+
 
 ### 为您的项目设置 Diesel
 
 我们可以将 `DATABASE_URL` 写入 `.env` 文件，避免污染全局环境，方便本地多个项目使用各自的数据库配置。
 
+
 ```bash 
-echo DATABASE_URL=./database.db > .env
+echo DATABASE_URL=postgres://user:password@127.0.0.1:5432/database > .env
 ```
 
 现在通过 Diesel CLI 初始化我们项目的基本内容：
@@ -155,11 +145,11 @@ diesel migration run
 
 运行迁移后会创建包含以下内容的 `schema.rs` 文件：
 
-```rs
+```rust
 diesel::table! {
     users (id) {
-        id -> Integer,
-        username -> Text,
+        id -> Int4,
+        username -> Varchar,
         remark -> Text,
     }
 }
@@ -173,7 +163,7 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 #[derive(Queryable, Insertable, Selectable,     Serialize, Deserialize, Debug)]
 #[diesel(table_name = users)]
-#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct User {
     pub id: i32,
     pub username: String,
@@ -188,11 +178,11 @@ pub struct NewUser {
 }
 ```
 
-### SQLite 数据库连接
+### PostgreSQL 数据库连接
 
 ```rust
 // 定义一个用于异步共享的数据库连接池类型
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -201,7 +191,7 @@ async fn main() -> std::io::Result<()> {
     // 获取数据库文件地址
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    let manager = ConnectionManager::<SqliteConnection>::new(database_url);
+    let manager = ConnectionManager::<PgConnection>::new(database_url);
 
     // 初始化数据库连接池
     let pool = r2d2::Pool::builder()
@@ -225,6 +215,10 @@ async fn main() -> std::io::Result<()> {
 }
 ```
 
+在 PostgreSQL 中，RETURNING 子句用于在执行 INSERT、UPDATE 或 DELETE 等 DML（数据操作语言）语句时，返回受影响的行或指定的列值。它非常有用，可以减少额外的查询，提高效率，尤其在需要获取操作结果（如新插入的 ID）时。
+
+并非所有数据库都支持 RETURNING 子句。在支持 RETURNING 子句的后端（例如 PostgreSQL 和 SQLite）上，我们也可以从 insert 中取回数据。在 SQLite 后端，从 3.35.0 版本开始支持 RETURNING。 要启用 RETURNING 子句，请添加功能标志， returning_clauses_for_sqlite_3_35 在 Cargo.toml 中。
+
 ### CRUD 示例
 
 #### 创建用户
@@ -240,8 +234,9 @@ async fn create_posts(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Resu
 
     let result = web::block(move || {
         diesel::insert_into(users)
-        .values(&new_user)
-        .execute(&mut conn)
+        .values(new_user)
+        .returning(User::as_returning())
+        .get_result(&mut conn)
     })
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;
@@ -314,19 +309,24 @@ async fn update_user(
 
 ```rust
 #[delete("/users/{id}")]
-async fn delete_user(pool: web::Data<DbPool>, path: web::Path<i32>) -> Result<impl Responder> {
+async fn delete_user(
+    pool: web::Data<DbPool>,
+    path: web::Path<i32>,
+) -> Result<impl Responder> {
     let user_id = path.into_inner();
+    let mut conn = pool.get().map_err(error::ErrorInternalServerError)?;
 
-    let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
-
-    let result = web::block(move || {
-        diesel::delete(users)
-        .filter(id.eq(user_id))
-        .execute(&mut conn)
+    let deleted_user = web::block(move || {
+        diesel::delete(users.filter(id.eq(user_id)))
+        .returning(User::as_returning())
+        .get_result(&mut conn) // 返回被删除的行
     })
-    .await?
-    .map_err(|e| error::ErrorInternalServerError(e))?;
+    .await?;
 
-    Ok(HttpResponse::Ok().json(result))
+    match deleted_user {
+        Ok(user) => Ok(HttpResponse::Ok().json(user)),
+        Err(diesel::NotFound) => Ok(HttpResponse::NotFound().json(json!({ "error": "用户不存在" }))),
+        Err(e) => Err(error::ErrorInternalServerError(e)),
+    }
 }
 ```

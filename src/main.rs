@@ -11,7 +11,7 @@ use dotenvy::dotenv;
 use std::{env, io};
 pub mod models;
 pub mod schema;
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[get("/users")]
 async fn list_users(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -110,7 +110,7 @@ async fn main() -> io::Result<()> {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let manager = ConnectionManager::<SqliteConnection>::new(database_url);
+    let manager = ConnectionManager::<PgConnection>::new(database_url);
     let pool = r2d2::Pool::builder()
         .max_size(15)
         .build(manager)
