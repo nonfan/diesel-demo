@@ -3,6 +3,7 @@ use crate::schema::users::dsl::*;
 use actix_web::{
     App, HttpResponse, HttpServer, Responder, Result, delete, error, get, post, put, web,
 };
+use serde_json::json;
 use diesel::prelude::*;
 use diesel::r2d2;
 use diesel::r2d2::ConnectionManager;
@@ -48,8 +49,9 @@ async fn create_posts(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Resu
 
     let result = web::block(move || {
         diesel::insert_into(users)
-            .values(&new_user)
-            .execute(&mut conn)
+            .values(new_user)
+        .returning(User::as_returning())
+        .get_result(&mut conn)
     })
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;
@@ -81,20 +83,25 @@ async fn update_user(
 }
 
 #[delete("/users/{id}")]
-async fn delete_user(pool: web::Data<DbPool>, path: web::Path<i32>) -> Result<impl Responder> {
+async fn delete_user(
+    pool: web::Data<DbPool>,
+    path: web::Path<i32>,
+) -> Result<impl Responder> {
     let user_id = path.into_inner();
+    let mut conn = pool.get().map_err(error::ErrorInternalServerError)?;
 
-    let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
-
-    let result = web::block(move || {
-        diesel::delete(users)
-            .filter(id.eq(user_id))
-            .execute(&mut conn)
+    let deleted_user = web::block(move || {
+        diesel::delete(users.filter(id.eq(user_id)))
+        .returning(User::as_returning())
+        .get_result(&mut conn) // 返回被删除的行
     })
-    .await?
-    .map_err(|e| error::ErrorInternalServerError(e))?;
+    .await?;
 
-    Ok(HttpResponse::Ok().json(result))
+    match deleted_user {
+        Ok(user) => Ok(HttpResponse::Ok().json(user)),
+        Err(diesel::NotFound) => Ok(HttpResponse::NotFound().json(json!({ "error": "用户不存在" }))),
+        Err(e) => Err(error::ErrorInternalServerError(e)),
+    }
 }
 
 #[actix_web::main]

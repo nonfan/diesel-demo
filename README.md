@@ -33,6 +33,57 @@ cargo new demo
 cd demo
 ```
 
+首先，让我们将 `Diesel` 和 `actix-web` 添加到我们的依赖项中。我们还将使用一个名为 `.env` 的工具来管理我们的环境变量。我们也会将其添加到我们的依赖项中。也包含一些日志记录依赖。
+
+**Cargo.toml**
+```toml
+[dependencies]
+actix-web = { version = "4.10.2" }
+diesel = { version = "2.2", features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
+dotenvy = "0.15"
+serde = { version = "1.0", features = ["derive"] }
+env_logger = "0.11"
+serde_json = "1.0"
+```
+
+#### features 解释
+
+**returning_clauses_for_sqlite_3_35**
+
+在 SQLite 3.35.0（2021年3月发布）之前，SQLite 不支持 RETURNING 子句（允许在 INSERT/UPDATE/DELETE 后直接返回修改的数据），也就是如下示例：
+
+```rust
+async fn example() {
+    let deleted_user = web::block(move || {
+        diesel::delete(users.filter(id.eq(user_id)))
+        // 如下代码必须在添加returning_clauses_for_sqlite_3_35特性可使用， 且models数据结构添加Selectable宏
+        .returning(User::as_returning())
+        .get_result(&mut conn) // 返回被删除的行
+    });
+}
+```
+
+添加 `Selectable` 宏:
+
+```rust
+#[derive(Selectable)]
+pub struct User {
+    pub id: i32,
+    pub username: String,
+    pub remark: String,
+}
+```
+
+这个 feature 是 Diesel 为平衡兼容性和功能提供的选项，适合需要优化 SQLite 操作性能的场景。
+
+未正确启用 `returning_clauses_for_sqlite_3_35`, 虽然你在 Cargo.toml 中启用了该 feature，但可能未正确传递依赖。**运行 `cargo clean && cargo build` 确保 feature 生效**
+
+**r2d2**
+
+在 Diesel ORM 中，r2d2 是一个用于管理数据库连接池的库，而 r2d2 特性（feature） 的作用是让 Diesel 集成 r2d2 连接池功能。
+
+默认情况下，Diesel 的数据库连接（如 PgConnection、SqliteConnection）是单次使用的。启用 r2d2 特性后，Diesel 会提供 r2d2 连接池支持，允许你在多线程环境中高效复用数据库连接。
+
 ### 安装 Diesel CLI
 
 ```bash
@@ -120,7 +171,7 @@ diesel::table! {
 use crate::schema::users;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-#[derive(Queryable, Insertable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Insertable, Selectable,     Serialize, Deserialize, Debug)]
 #[diesel(table_name = users)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct User {
