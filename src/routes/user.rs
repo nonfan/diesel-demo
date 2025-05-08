@@ -4,11 +4,8 @@ use actix_web::{
     HttpResponse, Responder, Result, delete, error, get, post, put, web,
 };
 use serde_json::json;
-use diesel::SelectableHelper;
 use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager,self};
-
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+use crate::DbPool;
 
 #[get("/users")]
 pub async fn list_users(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -35,7 +32,7 @@ pub async fn get_user(pool: web::Data<DbPool>, path: web::Path<i32>) -> Result<i
 }
 
 #[post("/users")]
-pub async fn create_posts(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Result<impl Responder> {
+pub async fn create_user(pool: web::Data<DbPool>, body: web::Json<NewUser>) -> Result<impl Responder> {
     let new_user = body.into_inner();
 
     let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
@@ -67,7 +64,8 @@ pub async fn update_user(
         diesel::update(users)
         .filter(id.eq(user_id))
         .set((username.eq(new_user.username), remark.eq(new_user.remark)))
-        .execute(&mut conn)
+        .returning(User::as_returning())
+        .get_result(&mut conn)
     })
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;

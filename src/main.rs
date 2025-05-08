@@ -6,15 +6,13 @@ use diesel::r2d2;
 use diesel::r2d2::ConnectionManager;
 use dotenvy::dotenv;
 use std::{env, io};
-pub mod models;
-pub mod schema;
-pub mod handlers;
+use rust_demo::routes;
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     env_logger::init();
     dotenv().ok();
-    use handlers::{get_user,list_users,create_posts,update_user,delete_user};
+    use routes::user::{get_user,list_users,create_user,update_user,delete_user};
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let manager = ConnectionManager::<SqliteConnection>::new(database_url);
@@ -28,7 +26,7 @@ async fn main() -> io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .service(list_users)
             .service(get_user)
-            .service(create_posts)
+            .service(create_user)
             .service(update_user)
             .service(delete_user)
     })

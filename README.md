@@ -47,3 +47,35 @@ name = "rust_demo"
 version = "0.1.0"
 edition = "2024"
 ```
+
+### 遇到的问题 :question:
+
+:one: 无法对连接池进行提炼
+
+`actix_http::Request` 类型无法引入，是 actix_web 的底层 http 模块，尚没有找到解决办法。
+
+```rust
+type TestApp = impl Service<
+    actix_http::Request,
+    Response = actix_web::dev::Response,
+    Error = actix_web::Error,
+>;
+async fn init_app() -> impl actix_web::dev::Service<
+    actix_web::dev::ServiceRequest,
+    Response = actix_web::dev::Response,
+    Error = actix_web::Error,
+> {
+
+    let pool = setup_test_db();
+    test::init_service(
+        App::new()
+        .app_data(web::Data::new(pool))
+        .service(list_users)
+        .service(get_user)
+        .service(create_user)
+        .service(update_user)
+        .service(delete_user),
+    )
+    .await
+}
+```

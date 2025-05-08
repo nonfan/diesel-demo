@@ -10,7 +10,7 @@ pub struct User {
     pub remark: String,
 }
 
-#[derive(Insertable, Deserialize)]
+#[derive(Insertable, Deserialize, Serialize)]
 #[diesel(table_name = users)]
 pub struct NewUser {
     pub username: String,
