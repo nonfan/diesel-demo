@@ -95,7 +95,7 @@ cargo install cargo-tarpaulin
 cargo tarpaulin --out Html
 ```
 
-:there: 调试错误： 如果测试失败，运行
+:three: 调试错误： 如果测试失败，运行
 
 ```bash
 cargo build --tests
