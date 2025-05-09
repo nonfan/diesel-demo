@@ -79,3 +79,25 @@ async fn init_app() -> impl actix_web::dev::Service<
     .await
 }
 ```
+
+### 验证测试
+
+:one: 运行测试
+
+```bash
+cargo test
+```
+
+:two: 检查覆盖率, 使用 `cargo tarpaulin` 检查：
+
+```bash
+cargo install cargo-tarpaulin
+cargo tarpaulin --out Html
+```
+
+:there: 调试错误： 如果测试失败，运行
+
+```bash
+cargo build --tests
+cargo test -- --show-output
+```

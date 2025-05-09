@@ -1,25 +1,14 @@
 use actix_web::{
-    App, HttpServer, Responder, web,
+    App, HttpServer, web,
 };
-use diesel::prelude::*;
-use diesel::r2d2;
-use diesel::r2d2::ConnectionManager;
-use dotenvy::dotenv;
-use std::{env, io};
-use rust_demo::routes;
+use rust_demo::actions::utils::establish_connection;
+use rust_demo::routes::user::{create_user, delete_user, get_user, list_users, update_user};
 
 #[actix_web::main]
-async fn main() -> io::Result<()> {
+async fn main() -> std::io::Result<()> {
     env_logger::init();
-    dotenv().ok();
-    use routes::user::{get_user,list_users,create_user,update_user,delete_user};
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let manager = ConnectionManager::<SqliteConnection>::new(database_url);
-    let pool = r2d2::Pool::builder()
-        .max_size(15)
-        .build(manager)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+    let pool = establish_connection()?;
 
     HttpServer::new(move || {
         App::new()
