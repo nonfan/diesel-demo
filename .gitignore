@@ -35,3 +35,7 @@ Thumbs.db
 # 测试覆盖率文件
 /coverage/
 tarpaulin-report.html
+
+# Nodejs
+/node_modules/
+/docs/.vitepress/dist/
