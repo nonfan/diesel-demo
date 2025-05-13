@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Diesel 中文文档",
-  base: "/repo/",
+  base: "/rust-demo/",
   description: "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
