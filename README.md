@@ -37,3 +37,35 @@ pub struct Page {
 #[derive(table_name = crate::schema::books)]
 #[diesel(table_name = crate::schema::pages)]
 ```
+
+:two: `books::table` 这种查询方式，老是报错像这样：
+
+> No function or associated item `table` found in the current scope for struct `table` [E0599]
+
+```rust
+fn func() {
+    let momo = books::table
+    .filter(books::title.eq("Momo"))
+    .select(Book::as_select())
+    .get_result(&mut conn)?;
+}
+```
+
+那是因为books变量被污染：
+
+```rust
+// 该引用也同样有books，但这不是你需要的哪个books
+use crate::schema::books::dsl::*;
+
+// 这才是你需要的books
+use crate::schema::books;
+```
+
+避免全局变量污染，但你需要引用 `use crate::schema::books::dsl::*` 请在函数内引用！
+
+:three: 使用 `Table::as_returninng()` 的关键
+
+```rust
+// 必须引入它
+use diesel::prelude::*;
+```

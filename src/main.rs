@@ -1,46 +1,19 @@
-
-use actix_web::{App, HttpResponse, HttpServer, Responder, Result, error, get, web};
+use actix_web::{web, App, HttpServer, Responder};
 use diesel::r2d2::ConnectionManager;
-use diesel::{ExpressionMethods, PgConnection, RunQueryDsl, r2d2};
+use diesel::{r2d2, PgConnection};
 use dotenvy::dotenv;
 use std::{env, io};
-use diesel::prelude::*;
 
-use rust_demo::models::{Page,Book};
-use rust_demo::schema::{books,pages};
+mod actions;
+mod apis;
+mod models;
+mod schema;
+
+use crate::apis::book::{all_way, create_book, get_book, get_book_by_inner_join, get_book_by_left_join, get_book_once};
+use crate::apis::page::create_page;
 
 // 定义一个用于异步共享的数据库连接池类型
 type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
-
-#[get("/")]
-async fn get_book(pool: web::Data<DbPool>) -> Result<impl Responder> {
-    // use crate::schema::books::dsl::*;
-
-    let mut conn = pool.get().map_err(|e| error::ErrorInternalServerError(e))?;
-
-    // let result = web::block(move || books.filter(title.eq("Momo")).first::<Book>(&mut conn))
-    //     .await?
-    //     .map_err(|e| error::ErrorInternalServerError(e))?;
-
-    let result = web::block(move || {
-
-        let momo = books::table
-        .filter(books::title.eq("Momo"))
-        .select(Book::as_select())
-        .get_result(&mut conn)?;
-
-        // get pages for a book
-        let pages = Page::belonging_to(&momo)
-        .select(Page::as_select())
-        .load(&mut conn);
-
-
-    })
-    .await?
-    .map_err(|e| error::ErrorInternalServerError(e))?;
-
-    Ok(HttpResponse::Ok().json(result))
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -63,7 +36,13 @@ async fn main() -> std::io::Result<()> {
         App::new()
             // 克隆连接池，以共享连接池
             .app_data(web::Data::new(pool.clone()))
+            .service(create_book)
             .service(get_book)
+            .service(get_book_once)
+            .service(get_book_by_inner_join)
+            .service(get_book_by_left_join)
+            .service(create_page)
+            .service(all_way)
     })
     .bind("127.0.0.1:8080")?
     .run()
