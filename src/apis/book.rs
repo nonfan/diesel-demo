@@ -165,40 +165,58 @@ async fn all_way(
     //     .select(Book::as_select())
     //     .load(&mut conn)
     // })
-    let result = web::block(move || -> Result<_, diesel::result::Error> {
-        let books_with_pages = authors::table
-        .filter(authors::name.eq("李明"))
-        .inner_join(books_authors::table.on(authors::id.eq(books_authors::author_id)))
-        .inner_join(books::table.on(books_authors::book_id.eq(books::id)))
-        .left_join(pages::table.on(books::id.eq(pages::book_id)))
-        .select((Book::as_select(), Option::<Page>::as_select()))
-        .load::<(Book, Option<Page>)>(&mut conn)?
-        .into_iter()
-        .fold(Vec::<BookWithPages>::new(), |mut acc, (book, page)| {
-            // 查找是否已有该书籍
-            if let Some(book_with_pages) = acc.iter_mut().find(|bwp| bwp.book.id == book.id) {
-                // 如果书籍已存在，添加页面
-                if let Some(page) = page {
-                    book_with_pages.pages.push(page);
-                }
-            } else {
-                // 新书籍，创建 BookWithPages
-                let mut pages = Vec::new();
-                if let Some(page) = page {
-                    pages.push(page);
-                }
-                acc.push(BookWithPages {
-                    book,
-                    pages,
-                });
-            }
-            acc
-        });
+    // let result = web::block(move || -> Result<_, diesel::result::Error> {
+    //     let books_with_pages = authors::table
+    //     .filter(authors::name.eq("李明"))
+    //     .inner_join(books_authors::table.on(authors::id.eq(books_authors::author_id)))
+    //     .inner_join(books::table.on(books_authors::book_id.eq(books::id)))
+    //     .left_join(pages::table.on(books::id.eq(pages::book_id)))
+    //     .select((Book::as_select(), Option::<Page>::as_select()))
+    //     .load::<(Book, Option<Page>)>(&mut conn)?
+    //     .into_iter()
+    //     .fold(Vec::<BookWithPages>::new(), |mut acc, (book, page)| {
+    //         // 查找是否已有该书籍
+    //         if let Some(book_with_pages) = acc.iter_mut().find(|bwp| bwp.book.id == book.id) {
+    //             // 如果书籍已存在，添加页面
+    //             if let Some(page) = page {
+    //                 book_with_pages.pages.push(page);
+    //             }
+    //         } else {
+    //             // 新书籍，创建 BookWithPages
+    //             let mut pages = Vec::new();
+    //             if let Some(page) = page {
+    //                 pages.push(page);
+    //             }
+    //             acc.push(BookWithPages {
+    //                 book,
+    //                 pages,
+    //             });
+    //         }
+    //         acc
+    //     });
+    //
+    //     Ok(books_with_pages)
+    // })
+    let result = web::block(move ||{
+        let all_books = books::table.select(Book::as_select()).load(&mut conn)?;
 
-        Ok(books_with_pages)
+        // get all pages for all books
+        let all_pages = Page::belonging_to(&all_books)
+        .select(Page::as_select())
+        .load(&mut conn)?;
+
+        let pages_per_book = all_pages
+        .grouped_by(&all_books)
+        .into_iter()
+        .zip(all_books)
+        .map(|(pages, book)| (book, pages))
+        .collect::<Vec<(Book, Vec<Page>)>>();
+
+        Ok::<_, diesel::result::Error>(pages_per_book)
     })
     .await?
     .map_err(|e| error::ErrorInternalServerError(e))?;
+
 
     Ok(HttpResponse::Ok().json(result))
 }
