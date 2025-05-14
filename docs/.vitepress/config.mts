@@ -6,7 +6,7 @@ export default defineConfig({
   base: "/rust-demo/",
   description: "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器",
   head: [['link', {rel: 'icon', href: '/rust-demo/favicon.png'}]],
-  lang: "zn",
+  lang: "zh-CN",
   locales: {
     root: {
       label: 'Chinese',
@@ -15,11 +15,25 @@ export default defineConfig({
   },
   cleanUrls: true,
   themeConfig: {
+    lastUpdated: {
+        text: '最后更新于',
+        formatOptions: {
+          dateStyle: 'full',
+          timeStyle: 'medium'
+        },
+    },
     siteTitle: false,
     logo: {
       light: "/logo.svg",
       dark: "/logo-dark.svg"
     },
+    docFooter: {
+      prev: '上一篇',
+      next: '下一篇'
+    },
+    darkModeSwitchLabel: '外观',
+    returnToTopLabel: '返回顶部',
+    sidebarMenuLabel: '菜单',
     nav: [
       {text: '指南', link: '/markdown-examples'}
     ],
@@ -37,10 +51,15 @@ export default defineConfig({
       provider: 'local'
     },
     socialLinks: [
-      {icon: 'github', link: 'https://github.com/nonfan'}
+      {icon: 'github', link: 'https://github.com/nonfan/rust-demo'}
     ],
     editLink: {
-          pattern: 'https://github.com/nonfan/diesel-demo/edit/docs/docs/:path'
-        }
+      pattern: 'https://github.com/nonfan/diesel-demo/edit/docs/docs/:path',
+      text: "在 GitHub 上编辑此页面"
+    },
+footer: {
+      message: '基于 MIT 许可发布',
+      copyright: 'Copyright © 2025-present <a href="https://github.com/nonfan">MOFAN</a>'
+    },
   }
 })
