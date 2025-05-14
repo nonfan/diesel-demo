@@ -17,10 +17,6 @@ export default defineConfig({
   themeConfig: {
     lastUpdated: {
         text: '最后更新于',
-        formatOptions: {
-          dateStyle: 'full',
-          timeStyle: 'medium'
-        },
     },
     siteTitle: false,
     logo: {
