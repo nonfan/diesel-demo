@@ -161,7 +161,8 @@ async fn main() -> std::io::Result<()> {
 
 :three: 在 `main.rs` 创建并共享连接池：
 
-在项目入口 `main.rs` 中初始化连接池，并通过 Web 框架（如 Actix Web）的 `App::app_data()` 方法将其作为共享状态传入各个处理函数。这样可以确保整个服务生命周期内复用同一个连接池，提高性能并保证线程安全。
+在项目入口 `main.rs` 中初始化连接池，并通过 Web 框架（如 Actix Web）的 `App::app_data()`
+方法将其作为共享状态传入各个处理函数。这样可以确保整个服务生命周期内复用同一个连接池，提高性能并保证线程安全。
 
 ```rust
 use actix_web::{web, App, HttpServer};
@@ -181,5 +182,5 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 ```
-
-[本教程代码直达➡️](1)
+> [!TIP] 前往 GitHub 查看完整示例代码
+> [本教程代码直达➡️](https://github.com/nonfan/rust-demo/tree/docs/examples/ch02_r2d2)
