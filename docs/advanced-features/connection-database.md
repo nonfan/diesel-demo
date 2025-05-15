@@ -183,4 +183,4 @@ async fn main() -> std::io::Result<()> {
 }
 ```
 > [!TIP] 导航 
-> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/rust-demo/tree/docs/examples/ch02_r2d2)
+> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/diesel-demo/tree/docs/examples/ch02_r2d2)

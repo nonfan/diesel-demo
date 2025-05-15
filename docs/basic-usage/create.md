@@ -133,4 +133,4 @@ pub struct ReturnedUser {
 | `.returning(x)`  | 返回指定字段                        |
 
 > [!TIP] 导航
-> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/rust-demo/tree/docs/examples/ch04_usage_insert)
+> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/diesel-demo/tree/docs/examples/ch04_usage_insert)

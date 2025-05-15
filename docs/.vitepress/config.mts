@@ -2,9 +2,9 @@ import {defineConfig} from 'vitepress'
 
 export default defineConfig({
   title: "Diesel 中文文档",
-  base: "/rust-demo/",
+  base: "/diesel-demo/",
   description: "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器",
-  head: [['link', {rel: 'icon', href: '/rust-demo/favicon.png'}]],
+  head: [['link', {rel: 'icon', href: '/diesel-demo/favicon.png'}]],
   lang: "zh-CN",
   locales: {
     root: {
@@ -68,7 +68,7 @@ export default defineConfig({
       provider: 'local'
     },
     socialLinks: [
-      {icon: 'github', link: 'https://github.com/nonfan/rust-demo'}
+      {icon: 'github', link: 'https://github.com/nonfan/diesel-demo'}
     ],
     editLink: {
       pattern: 'https://github.com/nonfan/diesel-demo/edit/docs/docs/:path',
@@ -76,7 +76,7 @@ export default defineConfig({
     },
     footer: {
       message: '基于 MIT 许可发布',
-      copyright: 'Copyright © 2025-present <a href="https://github.com/nonfan">MOFAN</a>'
+      copyright: 'Copyright © 2025-present <a href="https://github.com/nonfan/diesel-demo">MOFAN</a>'
     },
   }
 })

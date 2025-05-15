@@ -64,5 +64,5 @@ Diesel 提供了一些常见的查询方法，简化了与数据库交互的过�
 查询执行是 Diesel ORM 的基础操作之一。通过简单的查询构建器方法，如 `load`、`find`、`filter`、`order_by` 等，我们可以高效地与数据库进行交互。
 
 > [!TIP] 导航
-> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/rust-demo/tree/docs/examples/ch03_usage_read)
+> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/diesel-demo/tree/docs/examples/ch03_usage_read)
 
