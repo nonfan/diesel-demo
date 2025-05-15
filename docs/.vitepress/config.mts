@@ -1,6 +1,4 @@
 import {defineConfig} from 'vitepress'
-import {withI18n} from 'vitepress-i18n';
-
 export default defineConfig({
   title: "Diesel 中文文档",
   base: "/rust-demo/",
@@ -16,7 +14,7 @@ export default defineConfig({
   cleanUrls: true,
   themeConfig: {
     lastUpdated: {
-        text: '最后更新于',
+      text: '最后更新于',
     },
     siteTitle: false,
     logo: {
@@ -41,6 +39,18 @@ export default defineConfig({
           {text: 'Diesel 是什么?', link: '/intro/what-is-diesel'},
           {text: '快速开始', link: '/intro/getting-started'},
         ]
+      },
+      {
+        text: '基础用法',
+        collapsed: false,
+        items: [
+          {text: '连接池', link: '/basic-usage/connection-database'},
+          {text: '定义模型', link: '/basic-usage/defining-models'},
+          {text: '查询执行', link: '/basic-usage/read'},
+          {text: '插入数据', link: '/basic-usage/create'},
+          {text: '更新数据', link: '/basic-usage/update'},
+          {text: '删除数据', link: '/basic-usage/delete'},
+        ]
       }
     ],
     search: {
@@ -53,7 +63,7 @@ export default defineConfig({
       pattern: 'https://github.com/nonfan/diesel-demo/edit/docs/docs/:path',
       text: "在 GitHub 上编辑此页面"
     },
-footer: {
+    footer: {
       message: '基于 MIT 许可发布',
       copyright: 'Copyright © 2025-present <a href="https://github.com/nonfan">MOFAN</a>'
     },
