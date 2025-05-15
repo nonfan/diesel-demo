@@ -182,5 +182,5 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 ```
-> [!TIP] 前往 GitHub 查看完整示例代码
-> [本教程代码直达➡️](https://github.com/nonfan/rust-demo/tree/docs/examples/ch02_r2d2)
+> [!TIP] 导航 
+> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/rust-demo/tree/docs/examples/ch02_r2d2)

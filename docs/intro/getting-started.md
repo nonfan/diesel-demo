@@ -405,5 +405,5 @@ Body 关于Rust如何快速开始
 
 当我们再次尝试运行 `cargo run --bin list_posts` 时，我们可以看到该帖子确实已被删除。这仅仅触及了 Diesel 功能的冰山一角，但希望本教程能为您提供良好的基础。
 
-> [!TIP] 前往 GitHub 查看完整示例代码
-> [本教程博客Demo代码直达➡️](https://github.com/nonfan/rust-demo/tree/docs/examples/ch01_blog_demo_cli)
+> [!TIP] 导航
+> [前往 GitHub 查看完整示例代码](https://github.com/nonfan/rust-demo/tree/docs/examples/ch01_blog_demo_cli)

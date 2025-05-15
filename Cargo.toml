@@ -1,0 +1,11 @@
+[package]
+name = "diesel-demo"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = [
+    "examples/ch01_blog_demo_cli",
+    "examples/ch02_r2d2",
+    "examples/ch03_usage_read",
+]
