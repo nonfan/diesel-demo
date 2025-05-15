@@ -46,7 +46,6 @@ export default defineConfig({
         collapsed: false,
         items: [
           {text: '数据模型', link: '/basic-usage/models'},
-          {text: '连接池', link: '/basic-usage/connection-database'},
           {text: '查询执行', link: '/basic-usage/read'},
           {text: '插入数据', link: '/basic-usage/create'},
           {text: '更新数据', link: '/basic-usage/update'},
@@ -57,8 +56,11 @@ export default defineConfig({
         text: "高级特性",
         collapsed: false,
         items: [
-          {text: "关联关系", link: '/advanced-features/relations'},
           {text: "事务", link: '/advanced-features/transaction'},
+          {text: '连接池', link: '/advanced-features/connection-database'},
+          {text: "关联关系", link: '/advanced-features/relations'},
+          {text: "自定义类型", link: '/advanced-features/relations'},
+          {text: "迁移", link: '/advanced-features/relations'},
         ]
       }
     ],

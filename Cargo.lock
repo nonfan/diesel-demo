@@ -353,6 +353,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ch04_usage_insert"
+version = "0.1.0"
+dependencies = [
+ "diesel",
+ "dotenvy",
+ "serde",
+]
+
+[[package]]
 name = "cookie"
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
