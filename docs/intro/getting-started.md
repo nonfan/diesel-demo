@@ -403,4 +403,4 @@ Body 关于Rust如何快速开始
 删除 2 篇帖子
 ```
 
-当我们再次尝试运行 `cargo run --bin list_posts` 时，我们可以看到该帖子确实已被删除。这仅仅触及了 Diesel 功能的冰山一角，但希望本教程能为您提供良好的基础，[本教程博客Demo代码直达➡️]()
+当我们再次尝试运行 `cargo run --bin list_posts` 时，我们可以看到该帖子确实已被删除。这仅仅触及了 Diesel 功能的冰山一角，但希望本教程能为您提供良好的基础，[本教程博客Demo代码直达➡️](https://github.com/nonfan/rust-demo/tree/docs/examples/ch01_blog_demo_cli)
