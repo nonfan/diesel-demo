@@ -1,4 +1,5 @@
 import {defineConfig} from 'vitepress'
+
 export default defineConfig({
   title: "Diesel 中文文档",
   base: "/rust-demo/",
@@ -44,12 +45,20 @@ export default defineConfig({
         text: '基础用法',
         collapsed: false,
         items: [
+          {text: '数据模型', link: '/basic-usage/models'},
           {text: '连接池', link: '/basic-usage/connection-database'},
-          {text: '定义模型', link: '/basic-usage/defining-models'},
           {text: '查询执行', link: '/basic-usage/read'},
           {text: '插入数据', link: '/basic-usage/create'},
           {text: '更新数据', link: '/basic-usage/update'},
           {text: '删除数据', link: '/basic-usage/delete'},
+        ]
+      },
+      {
+        text: "高级特性",
+        collapsed: false,
+        items: [
+          {text: "关联关系", link: '/advanced-features/relations'},
+          {text: "事务", link: '/advanced-features/transaction'},
         ]
       }
     ],
