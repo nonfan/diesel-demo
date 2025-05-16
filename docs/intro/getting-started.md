@@ -157,7 +157,7 @@ Creating migrations/2025-05-14-111454_create_posts/down.sql
 
 ::: code-group
 
-```postgresql [up.sql (PostgreSQL)]
+```sql [up.sql (PostgreSQL)]
 CREATE TABLE posts
 (
     id        SERIAL PRIMARY KEY,
@@ -167,7 +167,7 @@ CREATE TABLE posts
 );
 ```
 
-```sqlite [up.sql (SQLite)]
+```sql [up.sql (SQLite)]
 CREATE TABLE posts
 (
     id        INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -177,7 +177,7 @@ CREATE TABLE posts
 );
 ```
 
-```mysql [up.sql (MySQL)]
+```sql [up.sql (MySQL)]
 CREATE TABLE posts
 (
     id        INTEGER AUTO_INCREMENT PRIMARY KEY,
