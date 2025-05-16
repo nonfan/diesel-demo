@@ -10,4 +10,5 @@ members = [
     "examples/ch03_usage_read",
     "examples/ch04_usage_insert",
     "examples/ch05_usage_update",
+    "examples/ch06_usage_delete",
 ]
