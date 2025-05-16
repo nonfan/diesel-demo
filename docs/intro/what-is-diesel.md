@@ -66,11 +66,11 @@ SQL 相当。
 
 Diesel 原生支持三大主流数据库：
 
-- PostgreSQL（功能最全面）
+- [PostgreSQL](https://github.com/nonfan/diesel-demo/tree/db/postgres-crud)（功能最全面）
 
-- MySQL（高兼容性）
+- [MySQL](https://github.com/nonfan/diesel-demo/tree/db/mysql-crud)（高兼容性）
 
-- SQLite（轻量便捷，适合开发和测试）
+- [SQLite](https://github.com/nonfan/diesel-demo/tree/db/sqlite-crud)（轻量便捷，适合开发和测试）
 
 且其代码结构清晰、跨数据库切换成本较低。
 

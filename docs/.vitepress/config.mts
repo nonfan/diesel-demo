@@ -32,7 +32,7 @@ export default defineConfig({
     returnToTopLabel: '返回顶部',
     sidebarMenuLabel: '菜单',
     nav: [
-      {text: '指南', link: '/markdown-examples'}
+      {text: '指南', link: '/intro/what-is-diesel'}
     ],
     sidebar: [
       {
