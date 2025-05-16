@@ -9,4 +9,5 @@ members = [
     "examples/ch02_r2d2",
     "examples/ch03_usage_read",
     "examples/ch04_usage_insert",
+    "examples/ch05_usage_update",
 ]
