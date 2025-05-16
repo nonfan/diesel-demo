@@ -4,15 +4,17 @@ export default defineConfig({
   title: "Diesel 中文文档",
   base: "/diesel-demo/",
   description: "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器",
-  head: [['link', {rel: 'icon', href: '/diesel-demo/favicon.png'}]],
+  head: [['link', {rel: 'icon', href: '/diesel-demo/favicon.png'}], ['meta', {
+    name: 'keywords',
+    content: 'Diesel中文文档'
+  }],
+    ['meta', {name: 'author', content: 'MOFAN'}],
+    ['link', {rel: 'canonical', href: 'https://nonfan.github.io/diesel-demo/'}]],
   lang: "zh-CN",
-  locales: {
-    root: {
-      label: 'Chinese',
-      lang: 'fr'
-    },
-  },
   cleanUrls: true,
+  sitemap: {
+    hostname: 'https://nonfan.github.io/diesel-demo/'
+  },
   themeConfig: {
     lastUpdated: {
       text: '最后更新于',
