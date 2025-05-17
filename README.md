@@ -5,6 +5,7 @@
 ### Diesel Test 指南
 
 **项目结构预览**
+
 ```bash
 diesel_demo/
 ├── migrations/                 # Diesel 数据库迁移文件夹（由 diesel CLI 创建）
@@ -23,7 +24,6 @@ diesel_demo/
 ├── Cargo.toml                  # Rust 项目的依赖管理文件，记录依赖包、版本、构建信息等
 ├── README.md                   # 项目说明文档，介绍项目用途、如何运行、如何使用等
 ```
-
 
 ### 测试前提
 
@@ -46,38 +46,6 @@ pub mod handlers;
 name = "rust_demo"
 version = "0.1.0"
 edition = "2024"
-```
-
-### 遇到的问题 :question:
-
-:one: 无法对连接池进行提炼
-
-`actix_http::Request` 类型无法引入，是 actix_web 的底层 http 模块，尚没有找到解决办法。
-
-```rust
-type TestApp = impl Service<
-    actix_http::Request,
-    Response = actix_web::dev::Response,
-    Error = actix_web::Error,
->;
-async fn init_app() -> impl actix_web::dev::Service<
-    actix_web::dev::ServiceRequest,
-    Response = actix_web::dev::Response,
-    Error = actix_web::Error,
-> {
-
-    let pool = setup_test_db();
-    test::init_service(
-        App::new()
-        .app_data(web::Data::new(pool))
-        .service(list_users)
-        .service(get_user)
-        .service(create_user)
-        .service(update_user)
-        .service(delete_user),
-    )
-    .await
-}
 ```
 
 ### 验证测试
