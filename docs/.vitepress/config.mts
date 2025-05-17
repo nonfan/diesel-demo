@@ -52,6 +52,7 @@ export default defineConfig({
           {text: '插入数据', link: '/basic-usage/create'},
           {text: '更新数据', link: '/basic-usage/update'},
           {text: '删除数据', link: '/basic-usage/delete'},
+          {text: '原生 SQL', link: '/basic-usage/native_sql'},
         ]
       },
       {
@@ -61,8 +62,8 @@ export default defineConfig({
           {text: "事务", link: '/advanced-features/transaction'},
           {text: '连接池', link: '/advanced-features/connection-database'},
           {text: "关联关系", link: '/advanced-features/relations'},
-          {text: "自定义类型", link: '/advanced-features/relations'},
-          {text: "迁移", link: '/advanced-features/relations'},
+          {text: "自定义类型", link: '/advanced-features/custom-types'},
+          {text: "迁移", link: '/advanced-features/migration'},
         ]
       }
     ],

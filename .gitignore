@@ -1,4 +1,5 @@
 # 编译输出目录
+target/
 **/target/
 
 # Rust 编译器生成的备份文件

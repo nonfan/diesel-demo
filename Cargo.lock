@@ -380,6 +380,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "ch07_features_transaction"
+version = "0.1.0"
+dependencies = [
+ "diesel",
+ "dotenvy",
+ "serde",
+]
+
+[[package]]
+name = "ch08_features_custom_types"
+version = "0.1.0"
+dependencies = [
+ "diesel",
+ "dotenvy",
+ "serde",
+]
+
+[[package]]
+name = "ch09_features_relations"
+version = "0.1.0"
+dependencies = [
+ "diesel",
+ "dotenvy",
+ "serde",
+]
+
+[[package]]
 name = "cookie"
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

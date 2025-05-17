@@ -11,4 +11,7 @@ members = [
     "examples/ch04_usage_insert",
     "examples/ch05_usage_update",
     "examples/ch06_usage_delete",
+    "examples/ch07_features_transaction",
+    "examples/ch08_features_custom_types",
+    "examples/ch09_features_relations",
 ]

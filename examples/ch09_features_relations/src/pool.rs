@@ -1,8 +1,6 @@
 use diesel::prelude::*;
-use std::env;
 use dotenvy::dotenv;
-pub mod schema;
-pub mod models;
+use std::env;
 
 pub fn establish_connection() -> PgConnection {
     // 让我们可以获取环境变量 .env 内容
