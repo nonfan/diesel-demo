@@ -1,4 +1,4 @@
-<img src="./logo.svg" height="100px" />
+<img src="./logo.png" height="100px" />
 
 ## 写测试不是浪费时间，而是节省你未来无数排查 bug 的时间，提高开发效率和代码质量。
 
