@@ -16,9 +16,11 @@ export default defineConfig({
     hostname: 'https://nonfan.github.io/diesel-demo/'
   },
   themeConfig: {
+    outline: [2, 3],
     lastUpdated: {
       text: '最后更新于',
     },
+    outlineTitle: "页面导航",
     siteTitle: false,
     logo: {
       light: "/logo.svg",
@@ -32,11 +34,25 @@ export default defineConfig({
     returnToTopLabel: '返回顶部',
     sidebarMenuLabel: '菜单',
     nav: [
-      {text: '指南', link: '/intro/what-is-diesel'}
+      {text: '指南', link: '/intro/what-is-diesel'},
+      {
+        text: 'API 参考',
+        items: [
+          {
+            items: [
+              { text: 'latest', link: 'https://docs.diesel.rs/master/diesel/index.html' },
+              { text: '2.2.x release', link: 'https://docs.diesel.rs/2.2.x/diesel/index.html' },
+              { text: '2.1.x release', link: 'https://docs.diesel.rs/2.1.x/diesel/index.html' },
+              { text: '2.0.x release', link: 'https://docs.diesel.rs/2.0.x/diesel/index.html' },
+              { text: '1.4.x release', link: 'https://docs.diesel.rs/1.4.x/diesel/index.html' },
+            ]
+          }
+        ]
+      }
     ],
     sidebar: [
       {
-        text: '介绍',
+        text: '入门',
         items: [
           {text: 'Diesel 是什么?', link: '/intro/what-is-diesel'},
           {text: '快速开始', link: '/intro/getting-started'},
@@ -69,7 +85,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           {text: "深入了解 Schema", link: "/extensions/schema_in_depth"},
-          {text: "扩展柴油", link: "/extensions/extending-diesel"},
+          {text: "扩展 Diesel", link: "/extensions/extending-diesel"},
           {text: "配置 Diesel CLI", link: "/extensions/configuring-diesel-cli"},
         ]
       },
