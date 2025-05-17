@@ -65,6 +65,15 @@ export default defineConfig({
           {text: "自定义类型", link: '/advanced-features/custom-types'},
           {text: "迁移", link: '/advanced-features/migration'},
         ]
+      },
+      {
+        text: "扩展",
+        collapsed: false,
+        items: [
+          {text: "深入了解 Schema", link: "/extensions/schema_in_depth"},
+          {text: "扩展柴油", link: "/extensions/extending-diesel"},
+          {text: "配置 Diesel CLI", link: "/extensions/configuring-diesel-cli"},
+        ]
       }
     ],
     search: {
