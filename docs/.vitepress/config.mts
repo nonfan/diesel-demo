@@ -9,6 +9,7 @@ export default defineConfig({
     content: 'Diesel中文文档'
   }],
     ['meta', {name: 'author', content: 'MOFAN'}],
+    ['meta', {name: 'google-site-verification', content: 'w89dsfqi2nI2Xof32iFHlx0pF9DiEqrDpJEc7ON6ykQ'}],
     ['link', {rel: 'canonical', href: 'https://nonfan.github.io/diesel-demo/'}]],
   lang: "zh-CN",
   cleanUrls: true,
