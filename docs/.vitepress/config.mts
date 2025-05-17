@@ -37,7 +37,6 @@ export default defineConfig({
     sidebar: [
       {
         text: '介绍',
-        collapsed: false,
         items: [
           {text: 'Diesel 是什么?', link: '/intro/what-is-diesel'},
           {text: '快速开始', link: '/intro/getting-started'},
@@ -63,7 +62,6 @@ export default defineConfig({
           {text: '连接池', link: '/advanced-features/connection-database'},
           {text: "关联关系", link: '/advanced-features/relations'},
           {text: "自定义类型", link: '/advanced-features/custom-types'},
-          {text: "迁移", link: '/advanced-features/migration'},
         ]
       },
       {
@@ -73,6 +71,18 @@ export default defineConfig({
           {text: "深入了解 Schema", link: "/extensions/schema_in_depth"},
           {text: "扩展柴油", link: "/extensions/extending-diesel"},
           {text: "配置 Diesel CLI", link: "/extensions/configuring-diesel-cli"},
+        ]
+      },
+      {
+        text: "示例",
+        collapsed: false,
+        items: [
+          {text: "Web CRUD 实践", items: [
+              {text: "Postgres", link: "https://github.com/nonfan/diesel-demo/tree/db/postgres-crud"},
+              {text: "MySQL", link: "https://github.com/nonfan/diesel-demo/tree/db/mysql-crud"},
+              {text: "SQLite", link: "https://github.com/nonfan/diesel-demo/tree/db/sqlite-crud"},
+              {text: "Test 测试用例", link: "https://github.com/nonfan/diesel-demo/tree/test/sqlite-crud"},
+            ]}
         ]
       }
     ],
