@@ -8,12 +8,12 @@ fn main() {
 
     let email = Email::new("test@test.com");
     let new_user = User { id: 1, email };
-    let result = diesel::insert_into(users)
-        .values(&new_user)
-        .get_result::<User>(conn);
-
-    match result {
-        Ok(data) => println!("user: {:?}", data.email),
-        Err(_) => println!("couldn't insert user"),
-    }
+    // let result = diesel::insert_into(users)
+    //     .values(&new_user)
+    //     .get_result::<User>(conn);
+    //
+    // match result {
+    //     Ok(data) => println!("user: {:?}", data.email),
+    //     Err(_) => println!("couldn't insert user"),
+    // }
 }
