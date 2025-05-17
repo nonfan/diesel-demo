@@ -1,4 +1,4 @@
-use ch07_features_transaction::{establish_connection, schema};
+use ch07_features_transaction::{establish_connection};
 
 #[derive(Debug)]
 enum MyError {

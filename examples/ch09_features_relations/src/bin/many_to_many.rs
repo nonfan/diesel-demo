@@ -3,7 +3,6 @@ use diesel::prelude::*;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     use models::{Author, Book, BookAuthor};
     use schema::{authors, books};
-    use schema::books_authors::dsl::books_authors;
 
     let conn = &mut establish_connection();
 

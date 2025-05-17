@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 use crate::custom_email_type::Email;
 
 #[derive(Queryable, Insertable)]
