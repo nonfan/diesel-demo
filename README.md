@@ -1,4 +1,4 @@
-<img src="./logo.png"/>
+<img src="./logo.png" height="100px" />
 
 # Diesel 中文文档 🇨🇳
 
