@@ -5,8 +5,8 @@ title: "Diesel中文文档"
 description: Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器
 
 hero:
-  name: "Diesel中文文档"
-  text: "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器"
+  name: "Diesel"
+  text: "是一个安全、可扩展的 Rust ORM 和查询构建器"
   tagline: ⚠️ 免责声明：本文内容为个人学习记录，不构成专业建议，仅供参考。如有错误欢迎指正。
   actions:
     - theme: brand

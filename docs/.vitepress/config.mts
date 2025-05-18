@@ -1,13 +1,19 @@
 import {defineConfig} from 'vitepress'
 
 export default defineConfig({
-  title: "Diesel 中文文档",
+  title: "Diesel",
   base: "/diesel-demo/",
-  description: "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器",
+  description: "是一个安全、可扩展的 Rust ORM 和查询构建器",
   head: [['link', {rel: 'icon', href: '/diesel-demo/favicon.png'}], ['meta', {
     name: 'keywords',
     content: 'Diesel中文文档'
   }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/android-chrome-192x192.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/android-chrome-512x512.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/favicon-16x16.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/favicon-32x32.png' }],
+    ['link', { rel: 'icon', type: 'image/x-icon', href: '/diesel-demo/favicon_io/favicon.ico' }],
+    ['link', { rel: 'apple-touch-icon', href: '/diesel-demo/favicon_io/apple-touch-icon.png' }],
     ['meta', {name: 'author', content: 'MOFAN'}],
     ['meta', {name: 'google-site-verification', content: 'w89dsfqi2nI2Xof32iFHlx0pF9DiEqrDpJEc7ON6ykQ'}],
     ['link', {rel: 'canonical', href: 'https://nonfan.github.io/diesel-demo/'}]],
