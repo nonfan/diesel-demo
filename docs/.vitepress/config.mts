@@ -23,15 +23,15 @@ export default defineConfig({
     hostname: 'https://nonfan.github.io/diesel-demo/'
   },
   themeConfig: {
-    outline: [2, 3],
-    lastUpdated: {
-      text: '最后更新于',
-    },
-    outlineTitle: "页面导航",
     siteTitle: false,
     logo: {
       light: "/logo.svg",
       dark: "/logo-dark.svg"
+    },
+    outlineTitle: "页面导航",
+    outline: [2, 3],
+    lastUpdated: {
+      text: '最后更新于',
     },
     docFooter: {
       prev: '上一篇',
@@ -55,7 +55,8 @@ export default defineConfig({
             ]
           }
         ]
-      }
+      },
+      {text: 'Diesel 官方文档', link: 'https://diesel.rs/'},
     ],
     sidebar: [
       {
@@ -121,7 +122,7 @@ export default defineConfig({
     },
     footer: {
       message: '基于 MIT 许可发布',
-      copyright: 'Copyright © 2025-present <a href="https://github.com/nonfan/diesel-demo">MOFAN</a>'
+      copyright: 'Copyright © 2025-present <a href="https://github.com/nonfan">MOFAN</a>'
     },
   }
 })
