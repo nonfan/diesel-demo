@@ -39,7 +39,7 @@ export default defineConfig({
       "name": "Diesel中文文档",
       "url": "https://nonfan.github.io/diesel-demo/",
       "description": "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器，中文文档提供详细指南和示例",
-      "logo": "https://nonfan.github.io/diesel-demo/favicon.png",
+      "logo": "https://nonfan.github.io/diesel-demo/favicon.ico",
       "publisher": {
         "@type": "Organization",
         "name": "Diesel Demo Team",
