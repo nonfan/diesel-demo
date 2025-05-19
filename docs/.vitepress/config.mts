@@ -4,18 +4,24 @@ export default defineConfig({
   title: "Diesel",
   base: "/diesel-demo/",
   description: "是一个安全、可扩展的 Rust ORM 和查询构建器",
-  head: [['link', {rel: 'icon', href: '/diesel-demo/favicon.png'}], ['meta', {
-    name: 'keywords',
-    content: 'Diesel中文文档'
-  }],
-    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/android-chrome-192x192.png' }],
-    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/android-chrome-512x512.png' }],
-    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/favicon-16x16.png' }],
-    ['link', { rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/favicon-32x32.png' }],
-    ['link', { rel: 'icon', type: 'image/x-icon', href: '/diesel-demo/favicon_io/favicon.ico' }],
-    ['link', { rel: 'apple-touch-icon', href: '/diesel-demo/favicon_io/apple-touch-icon.png' }],
+  head: [
+    ['link', {rel: 'icon', href: '/diesel-demo/favicon.ico'}],
+    ['link', {rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon.png'}],
+    ['meta', {name: 'keywords', content: 'Diesel中文文档'}],
+    ['link', {rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/android-chrome-192x192.png'}],
+    ['link', {rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/android-chrome-512x512.png'}],
+    ['link', {rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/favicon-16x16.png'}],
+    ['link', {rel: 'icon', type: 'image/png', href: '/diesel-demo/favicon_io/favicon-32x32.png'}],
+    ['link', {rel: 'icon', type: 'image/x-icon', href: '/diesel-demo/favicon_io/favicon.ico'}],
+    ['link', {rel: 'apple-touch-icon', href: '/diesel-demo/favicon_io/apple-touch-icon.png'}],
     ['meta', {name: 'author', content: 'MOFAN'}],
     ['meta', {name: 'google-site-verification', content: 'w89dsfqi2nI2Xof32iFHlx0pF9DiEqrDpJEc7ON6ykQ'}],
+    ['script', {type: 'application/ld+json'}, JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "https://nonfan.github.io/diesel-demo/",
+      "logo": "https://nonfan.github.io/diesel-demo/logo.png"
+    })],
     ['link', {rel: 'canonical', href: 'https://nonfan.github.io/diesel-demo/'}]],
   lang: "zh-CN",
   cleanUrls: true,
@@ -47,11 +53,11 @@ export default defineConfig({
         items: [
           {
             items: [
-              { text: 'latest', link: 'https://docs.diesel.rs/master/diesel/index.html' },
-              { text: '2.2.x release', link: 'https://docs.diesel.rs/2.2.x/diesel/index.html' },
-              { text: '2.1.x release', link: 'https://docs.diesel.rs/2.1.x/diesel/index.html' },
-              { text: '2.0.x release', link: 'https://docs.diesel.rs/2.0.x/diesel/index.html' },
-              { text: '1.4.x release', link: 'https://docs.diesel.rs/1.4.x/diesel/index.html' },
+              {text: 'latest', link: 'https://docs.diesel.rs/master/diesel/index.html'},
+              {text: '2.2.x release', link: 'https://docs.diesel.rs/2.2.x/diesel/index.html'},
+              {text: '2.1.x release', link: 'https://docs.diesel.rs/2.1.x/diesel/index.html'},
+              {text: '2.0.x release', link: 'https://docs.diesel.rs/2.0.x/diesel/index.html'},
+              {text: '1.4.x release', link: 'https://docs.diesel.rs/1.4.x/diesel/index.html'},
             ]
           }
         ]
@@ -101,12 +107,14 @@ export default defineConfig({
         text: "示例",
         collapsed: false,
         items: [
-          {text: "Web CRUD 实践", items: [
+          {
+            text: "Web CRUD 实践", items: [
               {text: "Postgres", link: "https://github.com/nonfan/diesel-demo/tree/db/postgres-crud"},
               {text: "MySQL", link: "https://github.com/nonfan/diesel-demo/tree/db/mysql-crud"},
               {text: "SQLite", link: "https://github.com/nonfan/diesel-demo/tree/db/sqlite-crud"},
               {text: "Test 测试用例", link: "https://github.com/nonfan/diesel-demo/tree/test/sqlite-crud"},
-            ]}
+            ]
+          }
         ]
       }
     ],
