@@ -32,25 +32,25 @@ export default defineConfig({
     ['meta', { name: 'twitter:description', content: 'Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器，中文文档提供详细指南和示例' }],
     ['meta', { name: 'twitter:image', content: 'https://nonfan.github.io/diesel-demo/favicon.png' }],
 
-    // JSON-LD 结构化数据（修复渲染问题，优化 Schema.org）
-    ['script', { type: 'application/ld+json' }, JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Diesel中文文档",
-      "url": "https://nonfan.github.io/diesel-demo/",
-      "description": "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器，中文文档提供详细指南和示例",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Diesel Demo Team",
-        "url": "https://nonfan.github.io/diesel-demo/",
-        "logo": "https://nonfan.github.io/diesel-demo/favicon.png"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://nonfan.github.io/diesel-demo/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }, null, 2)],
+    // // JSON-LD 结构化数据（修复渲染问题，优化 Schema.org）
+    // ['script', { type: 'application/ld+json' }, JSON.stringify({
+    //   "@context": "https://schema.org",
+    //   "@type": "WebSite",
+    //   "name": "Diesel中文文档",
+    //   "url": "https://nonfan.github.io/diesel-demo/",
+    //   "description": "Diesel 是一个安全、可扩展的 Rust ORM 和查询构建器，中文文档提供详细指南和示例",
+    //   "publisher": {
+    //     "@type": "Organization",
+    //     "name": "Diesel Demo Team",
+    //     "url": "https://nonfan.github.io/diesel-demo/",
+    //     "logo": "https://nonfan.github.io/diesel-demo/favicon.png"
+    //   },
+    //   "potentialAction": {
+    //     "@type": "SearchAction",
+    //     "target": "https://nonfan.github.io/diesel-demo/search?q={search_term_string}",
+    //     "query-input": "required name=search_term_string"
+    //   }
+    // }, null, 2)],
 
     // 规范链接
     ['link', { rel: 'canonical', href: 'https://nonfan.github.io/diesel-demo/' }]
